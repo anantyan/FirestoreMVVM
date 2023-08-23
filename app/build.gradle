@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'com.google.devtools.ksp'
     id 'com.google.dagger.hilt.android'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
@@ -43,12 +42,6 @@ android {
         viewBinding true
     }
 
-    kotlin {
-        sourceSets.debug {
-            kotlin.srcDir("build/generated/ksp/debug/kotlin")
-        }
-    }
-
     namespace 'com.anantyan.firestoremvvm'
 }
 
@@ -84,10 +77,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
-
-    /** easyadapter */
-    implementation "io.github.amrdeveloper:easyadapter:1.1.1"
-    ksp "io.github.amrdeveloper:easyadapter-compiler:1.1.1"
 
     /** coil */
     implementation 'io.coil-kt:coil:2.4.0'
