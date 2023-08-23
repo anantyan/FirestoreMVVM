@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "659083143930",
+    "project_id": "fir-mvvm-bf0d9",
+    "storage_bucket": "fir-mvvm-bf0d9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659083143930:android:29c278083ea05b42447743",
+        "android_client_info": {
+          "package_name": "com.anantyan.firestoremvvm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659083143930-7ts6qigrs75e0kc1k50s07cpb0m5gumi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anantyan.firestoremvvm",
+            "certificate_hash": "35b3667a71a785f4642045088108882a0edc0d88"
+          }
+        },
+        {
+          "client_id": "659083143930-vmpdenh4rphlgjrd13bg8kdcd3k71d6l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjHUDafjv9j_B-4Zz_EP9KOwBEdOqrDdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659083143930-vmpdenh4rphlgjrd13bg8kdcd3k71d6l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
