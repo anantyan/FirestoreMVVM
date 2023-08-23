@@ -47,11 +47,6 @@ class AddFragment : Fragment() {
                 binding.boolPublish.isChecked = it.data?.publish == true
             }
         }
-        viewModel.write.observe(viewLifecycleOwner) {
-            if (it is Resource.Success) {
-                requireContext().onSnackSuccess(binding.root, "Berhasil ditulis, ampun suhu 🙏")
-            }
-        }
     }
 
     private fun onBindView() {

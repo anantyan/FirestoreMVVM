@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anantyan.firestoremvvm.databinding.FragmentHomeBinding
 import com.anantyan.firestoremvvm.ui.main.MainViewModel
@@ -51,11 +52,6 @@ class HomeFragment : Fragment() {
     private fun onBindObserver() {
         viewModel.getAll().observe(viewLifecycleOwner) {
             homeAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-        }
-        viewModel.write.observe(viewLifecycleOwner) {
-            if (it is Resource.Success) {
-                requireContext().onSnackSuccess(binding.root, "Berhasil dihapus, ampun suhu 🙏")
-            }
         }
     }
 
@@ -98,6 +94,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.rvList.setHasFixedSize(true)
+        binding.rvList.layoutManager = LinearLayoutManager(requireContext())
         binding.rvList.itemAnimator = DefaultItemAnimator()
         binding.rvList.isNestedScrollingEnabled = false
         binding.rvList.addItemDecoration(requireContext().onDecorationListener(RecyclerView.VERTICAL, 16))

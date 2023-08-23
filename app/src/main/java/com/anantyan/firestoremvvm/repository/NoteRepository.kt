@@ -16,10 +16,9 @@ import javax.inject.Inject
 class NoteRepository @Inject constructor() {
 
     private val db = Firebase.firestore
-    /*private val user = Firebase.auth.currentUser*/
 
     fun getAll() = Pager(
-        config = PagingConfig(pageSize = 20),
+        config = PagingConfig(pageSize = 15),
         pagingSourceFactory = {
             NotePagingSource(db)
         }

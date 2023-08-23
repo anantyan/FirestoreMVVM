@@ -6,48 +6,44 @@ import com.anantyan.firestoremvvm.data.firestore.readAll
 import com.anantyan.firestoremvvm.model.Note
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
 import kotlinx.coroutines.tasks.await
 
 class NotePagingSource(
     private val db: FirebaseFirestore
-) : PagingSource<DocumentSnapshot, Note>() {
-    override fun getRefreshKey(state: PagingState<DocumentSnapshot, Note>): DocumentSnapshot? {
+) : PagingSource<QuerySnapshot, Note>() {
+    override fun getRefreshKey(state: PagingState<QuerySnapshot, Note>): QuerySnapshot? {
         return state.anchorPosition?.let {
             state.closestPageToPosition(it)?.prevKey
         }
     }
 
-    override suspend fun load(params: LoadParams<DocumentSnapshot>): LoadResult<DocumentSnapshot, Note> {
+    override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, Note> {
         return try {
-            val query = if (params.key == null) {
-                db.readAll().limit(params.loadSize.toLong())
-            } else {
-                db.readAll().startAfter(params.key).limit(params.loadSize.toLong())
+            val notes = params.key ?: db.readAll(15).get().await()
+
+            if (notes.isEmpty) {
+                return LoadResult.Page(
+                    data = emptyList(),
+                    prevKey = null,
+                    nextKey = null
+                )
             }
 
-            // coba baca dari cache terlebih dahulu
-            var snapshot = query.get(Source.CACHE).await()
+            val lastVisibleNotes = notes.documents[notes.size() - 1]
+            val nextKey = db.readAll(15).startAfter(lastVisibleNotes).get().await()
 
-            // jika data dari cache kosong atau tidak lengkap, ambil dari server
-            if (snapshot.documents.isEmpty() || snapshot.size() < params.loadSize) {
-                snapshot = try {
-                    query.get(Source.DEFAULT).await()
-                } catch (e: Exception) {
-                    query.get(Source.CACHE).await()
-                }
-            }
-
-            val notes = snapshot.documents.mapNotNull { it.toObject(Note::class.java) }
-
-            val nextKey = if (notes.isEmpty()) {
-                null
-            } else {
-                snapshot.documents[snapshot.size() - 1]
+            if (nextKey.isEmpty) {
+                return LoadResult.Page(
+                    data = notes.toObjects(Note::class.java),
+                    prevKey = null,
+                    nextKey = null
+                )
             }
 
             LoadResult.Page(
-                data =  notes,
+                data =  notes.toObjects(Note::class.java),
                 prevKey = null,
                 nextKey = nextKey
             )

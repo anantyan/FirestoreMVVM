@@ -21,13 +21,15 @@ class MainViewModel @Inject constructor(
 
     private val _read = LiveEvent<Resource<Note?>>(LiveEventConfig.PreferFirstObserver)
     private val _write = LiveEvent<Resource<Unit>>(LiveEventConfig.PreferFirstObserver)
+    private val _delete = LiveEvent<Resource<Unit>>(LiveEventConfig.PreferFirstObserver)
 
     val read: LiveData<Resource<Note?>> = _read
     val write: LiveData<Resource<Unit>> = _write
+    val delete: LiveData<Resource<Unit>> = _delete
 
-    fun getAll() = noteRepository.getAll().cachedIn(CoroutineScope(Dispatchers.IO)).asLiveData()
+    fun getAll() = noteRepository.getAll().cachedIn(viewModelScope).asLiveData()
 
-    fun getById(id: String) = CoroutineScope(Dispatchers.IO).launch {
+    fun getById(id: String) = viewModelScope.launch {
         _read.postValue(Resource.Loading())
         try {
             noteRepository.getById(id)
@@ -39,7 +41,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun insert(note: Note) = CoroutineScope(Dispatchers.IO).launch {
+    fun insert(note: Note) = viewModelScope.launch {
         _write.postValue(Resource.Loading())
         try {
             noteRepository.insert(note)
@@ -51,7 +53,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun update(id: String, note: Note) = CoroutineScope(Dispatchers.IO).launch {
+    fun update(id: String, note: Note) = viewModelScope.launch {
         _write.postValue(Resource.Loading())
         try {
             noteRepository.update(id, note)
@@ -63,15 +65,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun delete(id: String) = CoroutineScope(Dispatchers.IO).launch {
-        _write.postValue(Resource.Loading())
+    fun delete(id: String) = viewModelScope.launch {
+        _delete.postValue(Resource.Loading())
         try {
             noteRepository.delete(id)
                 .collectLatest {
-                    _write.postValue(Resource.Success(it))
+                    _delete.postValue(Resource.Success(it))
                 }
         } catch (ex: Exception) {
-            _write.postValue(Resource.Error(ex.message))
+            _delete.postValue(Resource.Error(ex.message))
         }
     }
 }

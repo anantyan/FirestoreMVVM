@@ -35,6 +35,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onBindObserver() {
+        viewModel.write.observe(this) {
+            if (it is Resource.Success) {
+                this.onSnackSuccess(binding.root, "Berhasil ditulis, ampun suhu 🙏")
+            }
+        }
+        viewModel.delete.observe(this) {
+            if (it is Resource.Success) {
+                this.onSnackSuccess(binding.root, "Berhasil dihapus, ampun suhu 🙏")
+            }
+        }
         viewModel.read.observe(this) {
             if (it is Resource.Error) {
                 this.onSnackError(binding.root, it.error.toString() + ", ampun suhu 🙏")
