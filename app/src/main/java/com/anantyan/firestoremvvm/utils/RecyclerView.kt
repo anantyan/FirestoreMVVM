@@ -16,20 +16,6 @@ private val ATTRS = intArrayOf(R.attr.listDivider)
 const val HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL
 const val VERTICAL_LIST = LinearLayoutManager.VERTICAL
 
-fun FloatingActionButton.onFABListener() = object : RecyclerView.OnScrollListener() {
-    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-        if (newState == RecyclerView.SCROLL_STATE_IDLE
-            && !this@onFABListener.isOrWillBeShown
-            && recyclerView.computeVerticalScrollOffset() == 0
-        ) this@onFABListener.show()
-        super.onScrollStateChanged(recyclerView, newState)
-    }
-    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-        if (dy != 0 && this@onFABListener.isOrWillBeShown) this@onFABListener.hide()
-        super.onScrolled(recyclerView, dx, dy)
-    }
-}
-
 fun Context.onDecorationListener(
     orientation: Int,
     margin: Int

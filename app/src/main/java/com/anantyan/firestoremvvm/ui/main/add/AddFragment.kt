@@ -42,9 +42,9 @@ class AddFragment : Fragment() {
     private fun onBindObserver() {
         viewModel.read.observe(viewLifecycleOwner) {
             if (it is Resource.Success) {
-                binding.txtTitle.setText(it.data?.title.toString())
-                binding.txtContent.setText(it.data?.content.toString())
-                binding.boolPublish.isChecked = it.data?.publish == true
+                binding.txtTitle.setText(it.data.title.toString())
+                binding.txtContent.setText(it.data.content.toString())
+                binding.boolPublish.isChecked = it.data.publish == true
             }
         }
     }

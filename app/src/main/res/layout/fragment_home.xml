@@ -23,7 +23,7 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add"
+        android:id="@+id/btn_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -31,6 +31,30 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:src="@drawable/ic_baseline_add_24"
+        android:focusable="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        android:src="@drawable/ic_baseline_add_24"
+        android:focusable="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_refresh_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        android:src="@drawable/baseline_gps_fixed_24"
         android:focusable="true" />
 
     <LinearLayout
@@ -41,11 +65,12 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_retry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Retry" />
+            android:text="Muat ulang"
+            app:icon="@drawable/baseline_refresh_24" />
     </LinearLayout>
 
     <TextView
@@ -53,7 +78,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Oops! Data an empty"
+        android:text="Oops! Data kosong"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txt_not_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Oops! Lokasi terlalu jauh"
         android:textStyle="bold"
         android:visibility="gone" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

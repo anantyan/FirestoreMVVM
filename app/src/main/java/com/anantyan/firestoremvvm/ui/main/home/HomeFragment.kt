@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -18,14 +17,8 @@ import com.anantyan.firestoremvvm.databinding.FragmentHomeBinding
 import com.anantyan.firestoremvvm.ui.main.MainViewModel
 import com.anantyan.firestoremvvm.utils.Resource
 import com.anantyan.firestoremvvm.utils.onDecorationListener
-import com.anantyan.firestoremvvm.utils.onFABListener
-import com.anantyan.firestoremvvm.utils.onSnackSuccess
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -45,17 +38,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onBindView()
+        setupRecyclerView()
+        setupInteractions()
         onBindObserver()
     }
 
-    private fun onBindObserver() {
-        viewModel.getAll().observe(viewLifecycleOwner) {
-            homeAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-        }
-    }
-
-    private fun onBindView() {
+    private fun setupRecyclerView() {
         homeAdapter = HomeAdapter()
         val loadStateHeader = HomeLoadStateAdapter { homeAdapter.retry() }
         val loadStateFooter = HomeLoadStateAdapter { homeAdapter.retry() }
@@ -76,21 +64,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
         homeAdapter.onLongClick { _, id ->
-            val builder = MaterialAlertDialogBuilder(requireContext())
-            builder.setCancelable(false)
-            builder.setTitle("Warning!")
-            builder.setMessage("Apakah anda ingin hapus data ${id}?")
-            builder.setPositiveButton("Iya", null)
-            builder.setNegativeButton("Tidak") { dialog, _ ->
-                dialog.dismiss()
-            }
-            val dialog = builder.show()
-            val btnPositif = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            btnPositif.setOnClickListener {
-                viewModel.delete(id)
-                dialog.dismiss()
-                homeAdapter.refresh()
-            }
+            showDeleteConfirmationDialog(id)
         }
 
         binding.rvList.setHasFixedSize(true)
@@ -98,15 +72,87 @@ class HomeFragment : Fragment() {
         binding.rvList.itemAnimator = DefaultItemAnimator()
         binding.rvList.isNestedScrollingEnabled = false
         binding.rvList.addItemDecoration(requireContext().onDecorationListener(RecyclerView.VERTICAL, 16))
-        binding.rvList.addOnScrollListener(binding.btnAdd.onFABListener())
         binding.rvList.adapter = concatAdapter
 
-        binding.swipeRefresh.setOnRefreshListener { homeAdapter.refresh() }
+        binding.swipeRefresh.setOnRefreshListener {
+            homeAdapter.refresh()
+            binding.swipeRefresh.isRefreshing = false
+        }
         binding.btnRetry.setOnClickListener { homeAdapter.retry() }
+    }
+
+    private fun setupInteractions() {
         binding.btnAdd.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToAddFragment(title = "Add")
             findNavController().navigate(action)
         }
+
+        binding.btnRefreshLocation.setOnClickListener {
+            viewModel.currentLocation()
+        }
+
+        binding.btnMain.setOnClickListener {
+            if (binding.btnRefreshLocation.visibility == View.INVISIBLE) {
+                binding.btnRefreshLocation.visibility = View.VISIBLE
+                binding.btnAdd.visibility = View.VISIBLE
+
+                binding.btnRefreshLocation.animate().translationY(-binding.btnMain.height.toFloat()-16f).start()
+                binding.btnAdd.animate().translationX(-binding.btnMain.width.toFloat()-16f).start()
+            } else {
+                binding.btnRefreshLocation.animate().translationY(0f).withEndAction {
+                    binding.btnRefreshLocation.visibility = View.INVISIBLE
+                }.start()
+
+                binding.btnAdd.animate().translationX(0f).withEndAction {
+                    binding.btnAdd.visibility = View.INVISIBLE
+                }.start()
+            }
+        }
+    }
+
+    private fun showDeleteConfirmationDialog(id: String) {
+        val builder = MaterialAlertDialogBuilder(requireContext())
+        builder.setCancelable(false)
+        builder.setTitle("Warning!")
+        builder.setMessage("Apakah anda ingin hapus data ${id}?")
+        builder.setPositiveButton("Iya", null)
+        builder.setNegativeButton("Tidak") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog = builder.show()
+        val btnPositif = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        btnPositif.setOnClickListener {
+            viewModel.delete(id)
+            dialog.dismiss()
+            homeAdapter.refresh()
+        }
+    }
+
+    private fun onBindObserver() {
+        viewModel.getAll().observe(viewLifecycleOwner) {
+            homeAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+        }
+        viewModel.currentLocation.observe(viewLifecycleOwner) {
+            handleCurrentLocation(it)
+        }
+        viewModel.currentLocation()
+    }
+
+    private fun handleCurrentLocation(resource: Resource<Boolean>) {
+        when (resource) {
+            is Resource.Loading -> showLoadingState()
+            is Resource.Success -> showSuccessState(resource.data)
+            else -> {}
+        }
+    }
+
+    private fun showLoadingState() {
+        binding.swipeRefresh.isRefreshing = true
+    }
+
+    private fun showSuccessState(data: Boolean) {
+        binding.txtNotLocation.isVisible = data
+        binding.swipeRefresh.isRefreshing = false
     }
 
     override fun onDestroyView() {

@@ -36,8 +36,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun onBindObserver() {
         viewModel.write.observe(this) {
-            if (it is Resource.Success) {
-                this.onSnackSuccess(binding.root, "Berhasil ditulis, ampun suhu 🙏")
+            when (it) {
+                is Resource.Success -> {
+                    this.onSnackSuccess(binding.root, "Berhasil ditulis, ampun suhu 🙏")
+                }
+                is Resource.Error -> {
+                    this.onSnackError(binding.root, it.exception + ", ampun suhu 🙏")
+                }
+                else -> {}
             }
         }
         viewModel.delete.observe(this) {
@@ -47,13 +53,12 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.read.observe(this) {
             if (it is Resource.Error) {
-                this.onSnackError(binding.root, it.error.toString() + ", ampun suhu 🙏")
+                this.onSnackError(binding.root, it.exception + ", ampun suhu 🙏")
             }
         }
-
-        viewModel.write.observe(this) {
+        viewModel.currentLocation.observe(this) {
             if (it is Resource.Error) {
-                this.onSnackError(binding.root, it.error.toString() + ", ampun suhu 🙏")
+                this.onSnackError(binding.root, it.exception + ", ampun suhu 🙏")
             }
         }
     }

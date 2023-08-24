@@ -13,6 +13,7 @@ import kotlinx.coroutines.tasks.await
 class NotePagingSource(
     private val db: FirebaseFirestore
 ) : PagingSource<QuerySnapshot, Note>() {
+
     override fun getRefreshKey(state: PagingState<QuerySnapshot, Note>): QuerySnapshot? {
         return state.anchorPosition?.let {
             state.closestPageToPosition(it)?.prevKey
@@ -21,9 +22,9 @@ class NotePagingSource(
 
     override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, Note> {
         return try {
-            val notes = params.key ?: db.readAll(15).get().await()
+            val currentPage = params.key ?: db.readAll(15).get().await()
 
-            if (notes.isEmpty) {
+            if (currentPage.isEmpty) {
                 return LoadResult.Page(
                     data = emptyList(),
                     prevKey = null,
@@ -31,21 +32,13 @@ class NotePagingSource(
                 )
             }
 
-            val lastVisibleNotes = notes.documents[notes.size() - 1]
-            val nextKey = db.readAll(15).startAfter(lastVisibleNotes).get().await()
-
-            if (nextKey.isEmpty) {
-                return LoadResult.Page(
-                    data = notes.toObjects(Note::class.java),
-                    prevKey = null,
-                    nextKey = null
-                )
-            }
+            val lastVisibleNote = currentPage.documents.lastOrNull()
+            val nextPage = lastVisibleNote?.let { db.readAll(15).startAfter(it).get().await() }
 
             LoadResult.Page(
-                data =  notes.toObjects(Note::class.java),
+                data =  currentPage.toObjects(Note::class.java),
                 prevKey = null,
-                nextKey = nextKey
+                nextKey = if (nextPage?.isEmpty != false) null else nextPage
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

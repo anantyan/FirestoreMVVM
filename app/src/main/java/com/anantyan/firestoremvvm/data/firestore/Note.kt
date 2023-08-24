@@ -7,7 +7,7 @@ import kotlinx.coroutines.tasks.await
 fun FirebaseFirestore.readAll(pageSize: Long = 20): Query{
     return this.collection("notes")
         /*.whereEqualTo("publish", true)*/
-        .orderBy("createAt")
+        .orderBy("createAt", Query.Direction.DESCENDING)
         .limit(pageSize)
 }
 
