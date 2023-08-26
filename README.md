@@ -8,3 +8,12 @@ Firestore application design with Jetpack component architecture and seasoning o
 - ```Modular Project```
 - ```MVVM Design Pattern```
 - ```Injection with Dagger + Hilt```
+
+### Project Structure
+- 📁 app ✔
+- 📁 core ✔
+- 📁 common ✔
+- 📁 view ✔
+-- 📁 main ✔
+-- 📁 note ❌
+-- 📁 auth ❌
