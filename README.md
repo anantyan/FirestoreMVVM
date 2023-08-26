@@ -14,6 +14,6 @@ Firestore application design with Jetpack component architecture and seasoning o
 - 📁 core ✔
 - 📁 common ✔
 - 📁 view ✔
--- 📁 main ✔
--- 📁 note ❌
--- 📁 auth ❌
+  - 📁 main ✔
+  - 📁 note ❌
+  - 📁 auth ❌
