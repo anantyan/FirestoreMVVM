@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
     id 'com.google.dagger.hilt.android'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
@@ -47,6 +48,10 @@ android {
 
 dependencies {
 
+    implementation project(path: ':common')
+    implementation project(path: ':core')
+    implementation project(path: ':view:main')
+
     /** androidx */
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -59,6 +64,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
     implementation 'androidx.paging:paging-runtime-ktx:3.2.0'
+    implementation "androidx.room:room-runtime:2.5.2"
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
+    ksp "androidx.room:room-compiler:2.5.2"
 
     /** google */
     implementation "com.google.android.gms:play-services-location:21.0.1"
@@ -94,8 +102,18 @@ dependencies {
     /** validator */
     implementation 'com.github.anderscheow:validator:3.0.3'
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    /*ROOM Unit Test*/
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation 'androidx.room:room-testing:2.5.2'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
+
+    androidTestImplementation 'junit:junit:4.13.2'
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.47'
+
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }

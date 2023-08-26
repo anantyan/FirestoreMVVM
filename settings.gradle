@@ -15,3 +15,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Firestore MVVM"
 include ':app'
+include ':core'
+include ':common'
+include ':view'
+include ':view:auth'
+include ':view:main'
+include ':view:note'
