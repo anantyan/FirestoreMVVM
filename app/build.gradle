@@ -52,68 +52,19 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':view:main')
 
-    /** androidx */
     implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "androidx.navigation:navigation-fragment-ktx:2.7.0"
-    implementation "androidx.navigation:navigation-ui-ktx:2.7.0"
-    implementation "androidx.fragment:fragment-ktx:1.6.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
-    implementation 'androidx.paging:paging-runtime-ktx:3.2.0'
     implementation "androidx.room:room-runtime:2.5.2"
-    implementation 'androidx.test.ext:junit-ktx:1.1.5'
-    ksp "androidx.room:room-compiler:2.5.2"
 
-    /** google */
     implementation "com.google.android.gms:play-services-location:21.0.1"
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.4.0'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
-    implementation 'com.google.firebase:firebase-auth-ktx:22.1.1'
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.7.0'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.2.1'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.4.1'
     implementation 'com.google.firebase:firebase-appcheck-playintegrity:17.0.1'
     implementation 'com.google.firebase:firebase-appcheck-debug:17.0.1'
-    implementation 'com.google.android.gms:play-services-auth:20.6.0'
-    implementation 'com.google.android.material:material:1.9.0'
     implementation 'com.google.dagger:hilt-android:2.47'
     kapt 'com.google.dagger:hilt-android-compiler:2.47'
 
-    /** jetbrains */
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
-
-    /** coil */
-    implementation 'io.coil-kt:coil:2.4.0'
-
-    /** imagepicker */
-    implementation 'com.github.dhaval2404:imagepicker:2.1'
-
-    /** rounded image view */
-    implementation 'com.makeramen:roundedimageview:2.3.0'
-
-    /** easypermission */
-    implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
-
-    /** validator */
-    implementation 'com.github.anderscheow:validator:3.0.3'
-
-    /*ROOM Unit Test*/
-    testImplementation 'org.mockito:mockito-core:5.3.1'
-    testImplementation 'androidx.room:room-testing:2.5.2'
-    testImplementation 'androidx.arch.core:core-testing:2.2.0'
-    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
-
-    androidTestImplementation 'junit:junit:4.13.2'
-    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.47'
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 }
